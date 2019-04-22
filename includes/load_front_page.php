@@ -5,50 +5,42 @@
  * Date: 17/04/2019
  * Time: 20:16
  */
-//TODO: add ob_start(); and ob_end(); dynamicaly thanks to the plugin.
 //TODO: URL rewritting
 
 class Front_page {
 
-    private $i = 0;
+    private $slug;
     public function __construct()
     {
-        add_action( 'template_redirect',  array($this, 'check_for_frontpage') );
-        add_filter('the_content', array($this, 'check_for_frontpage')); //appeler cette fonction et récupérer le contenu ici !!!
+        add_action( 'init',  array($this, 'check_cookie') );
+        add_filter('the_content', array($this, 'check_for_frontpage'));
     }
 
-    public function check_custom_slug($content)  {
-        if(isset($_GET['c']) && isset($_COOKIE["company"])){
+
+    public function check_cookie()  {
+        if (!isset($_GET['c']) && isset($_COOKIE['company'])) {
+            $this->slug = $_COOKIE['company'];
+        }
+
+        if(isset($_GET['c'])){
             setcookie("company", $_GET['c']);
-         }
-        if(isset($_COOKIE["company"])) {
-            $slug = $_COOKIE["company"];
+            $this->slug = $_GET['c'];
+        }
+    }
+    public function check_custom_slug($content)  {
+        if($this->slug) {
             $clps = carbon_get_theme_option( 'clp-content' );
 
-            for($this->i; $this->i < count($clps); $this->i++ ) {
-                if ($clps[$this->i]['clp_text'] !== $slug) {
+            for($i = 0; $i < count($clps); $i++ ) {
+               if ($clps[$i]['clp_text'] !== $this->slug) {
                     $content = $content;
-                    return $content;
                 } else {
-                    $content = wpautop($clps[$this->i]['champ_riche']); //wpautop fix paragraph issue
+                    $content = wpautop($clps[$i]['champ_riche']); //wpautop fix paragraph issue
                     return $content;
                     break;
                 }
             }
-        } else {
-              return $content;
-          }
-
-
-  //retravailler la logique. il faut que le get soit toujours egale à un des éléments.
-  /* if($_GET['c'] && $_COOKIE["company"] != $_GET['c']){
-       var_dump('url différente de cookie'); die();
-       setcookie("company", $_GET['c']);
-   }
-   if(isset($_COOKIE["company"]) && ($_COOKIE["company"] === carbon_get_theme_option( 'clp_text' )) ){
-       display_custom_message();
-   }*/
-
+      } return $content;
     }
 
     public function check_for_frontpage($content) {
@@ -68,6 +60,3 @@ class Front_page {
 
 new Front_page();
 
-
-
-//FAIRE UNE LOOP AVEC UN INDEX ET REGARDER LEQUEL EST LE BON ET FONCTIONNER AVEC LE TALEAU ET I
