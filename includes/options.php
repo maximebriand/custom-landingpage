@@ -1,4 +1,4 @@
-<?ph<?php
+<?php
 namespace DMB\Plugin\Options;
 
 use Carbon_Fields\Carbon_Fields;
@@ -6,21 +6,12 @@ use Carbon_Fields\Container;
 use Carbon_Fields\Field;
 
 
-/**
- * Créée une page d'options pour notre plugin.
- * Les onglets sont initialement vides mais sont définis et remplis de champs via des filtres définis plus bas.
- * TODO: regarder si je peux passer sans les tabs
- * @link https://carbonfields.net/docs/containers-theme-options/
- *
- * @return void
- */
-
 class Options {
     private $theme_options;
     public function __construct()
     {
         add_action( 'carbon_fields_register_fields', array($this, 'options_initialize_admin_page') );
-        add_action( 'carbon_fields_register_fields', array( $this, 'options_iadd_main_tab') );
+        add_action( 'carbon_fields_register_fields', array( $this, 'options_add_main_tab') );
         add_action( 'carbon_fields_register_fields', array( $this, 'options_add_custom_slug') );
 
 
