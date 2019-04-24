@@ -10,9 +10,11 @@
 class Front_page {
 
     private $slug;
+    private $custom_slug;
     public function __construct()
     {
         add_filter( 'redirect_canonical',  array($this, 'disable_canonical_redirect_for_front_page' ), 1);
+        add_action('init', array($this, 'check_custom_slug_name'));
         add_action('init', array($this, 'add_my_rewrite'), 10, 0);
         add_action( 'wp',  array($this, 'define_slug') );
         add_action( 'wp',  array($this, 'set_cookie') );
@@ -27,11 +29,22 @@ class Front_page {
         return $redirect;
     }
 
+    public function check_custom_slug_name()
+    {
+         if(null !== carbon_get_theme_option( 'clp_url' ))
+         {
+             $this->custom_slug = carbon_get_theme_option( 'clp_url' );
+         } else{
+             $this->custom_slug = 'welcome';
+         }
+
+    }
+
     public function add_my_rewrite()
     {
         $page_on_front = get_option( 'page_on_front' );
-        add_rewrite_rule('^welcome/(.*)/?', 'index.php?index.php?page_id=' . $page_on_front .'&welcome=$matches[1]', 'top');
-        add_rewrite_tag('%welcome%','([^&]+)');
+        add_rewrite_rule( $this->custom_slug . '/(.*)/?', 'index.php?index.php?page_id=' . $page_on_front .'&' . $this->custom_slug . '=$matches[1]', 'top');
+        add_rewrite_tag('%' . $this->custom_slug .'%','([^&]+)');
         flush_rewrite_rules();
     }
 

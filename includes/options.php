@@ -1,8 +1,6 @@
 <?php
 namespace DMB\Plugin\Options;
 
-
-
 use Carbon_Fields\Carbon_Fields;
 use Carbon_Fields\Container;
 use Carbon_Fields\Field;
@@ -48,8 +46,9 @@ add_action( 'carbon_fields_register_fields', __NAMESPACE__ . '\\options_initiali
  */
 function options_set_tabs( $tabs ) {
 	return [
-		'general'  => __( 'Général', 'clp-plugin' )
-	];
+		'general'  => __( 'Général', 'clp-plugin' ),
+        'advanced' => __( 'Avancé', 'msk-plugin' ),
+    ];
 }
 add_filter( 'clp_plugin_options_tabs', __NAMESPACE__ . '\\options_set_tabs' );
 
@@ -68,10 +67,14 @@ function options_general_tab_theme_fields() {
             Field::make( 'text', 'clp_text', 'Paramètre de l\'URL' ),
             Field::make( 'rich_text', 'champ_riche', __( 'Champs WYSIWYG', 'clp-plugin' ) ),
         ) );
-
-
 	return $fields;
 }
 add_filter( 'clp_plugin_options_fields_tab_general', __NAMESPACE__ . '\\options_general_tab_theme_fields', 10 );
 
+function options_advanced_tab_theme_fields() {
+    $fields = [];
+    $fields[] = Field::make( 'text', 'clp_url', 'Quel sera le paramètre statique de l\'URL, par exemple: mon-domaine.com/WELCOME/slug');
 
+    return $fields;
+}
+add_filter( 'clp_plugin_options_fields_tab_advanced', __NAMESPACE__ . '\\options_advanced_tab_theme_fields', 10 );
