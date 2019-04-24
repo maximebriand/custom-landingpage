@@ -19,6 +19,7 @@ class Front_page {
         add_filter('the_content', array($this, 'check_for_frontpage'));
     }
 
+    //detect if this is the home and delete redirect to allow our own redirect
     public function disable_canonical_redirect_for_front_page ($redirect)
     {
         if ( is_front_page() || is_home() ) {
@@ -35,7 +36,6 @@ class Front_page {
          } else{
              $this->custom_slug = 'welcome';
          }
-
     }
 
     public function add_my_rewrite()
@@ -48,9 +48,9 @@ class Front_page {
 
     public function define_slug(){
         global $wp_query;
-        if(isset($wp_query->query_vars['welcome']))
+        if(isset($wp_query->query_vars[$this->custom_slug]))
         {
-            $this->slug= $wp_query->query_vars['welcome'];
+            $this->slug= $wp_query->query_vars[$this->custom_slug];
         }
     }
 
@@ -88,8 +88,7 @@ class Front_page {
         $this->check_slug();
 
         if($this->slug) {
-            $clps = carbon_get_theme_option( 'clp-content' );
-
+            $clps = carbon_get_theme_option( 'clp_content' );
             for($i = 0; $i < count($clps); $i++ ) {
                if ($clps[$i]['clp_text'] !== $this->slug) {
                     $content = $content;

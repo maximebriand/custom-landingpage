@@ -13,8 +13,6 @@ class Options {
         add_action( 'carbon_fields_register_fields', array($this, 'options_initialize_admin_page') );
         add_action( 'carbon_fields_register_fields', array( $this, 'options_add_main_tab') );
         add_action( 'carbon_fields_register_fields', array( $this, 'options_add_custom_slug') );
-
-
     }
 
     public function options_initialize_admin_page() {
@@ -27,7 +25,7 @@ class Options {
 
     public function options_add_main_tab() {
         $this->theme_options->add_fields( array(
-            Field::make( 'complex', 'clp-content', 'Custom Landing Page' )
+            Field::make( 'complex', 'clp_content', 'Custom Landing Page' )
                 ->set_layout( 'tabbed-horizontal' )
                 ->add_fields( array(
                     Field::make( 'text', 'clp_text', 'Paramètre de l\'URL' ),
