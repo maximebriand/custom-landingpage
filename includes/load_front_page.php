@@ -5,8 +5,6 @@
  * Date: 17/04/2019
  * Time: 20:16
  */
-//TODO: URL rewritting
-
 class Front_page {
 
     private $slug;

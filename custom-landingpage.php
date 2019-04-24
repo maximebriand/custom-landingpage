@@ -8,34 +8,39 @@ Plugin Name: Custom Landing Page
 namespace DMB\Plugin;
 use Carbon_Fields\Field;
 use Carbon_Fields\Container;
+class customLandingPage {
+    public function __construct()
+    {
+        if ( ! defined( 'ABSPATH' ) ) {
+            exit;
+        }
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+        add_action( 'after_setup_theme', array($this, 'load_carbonfields') );
+        add_action( 'plugins_loaded', array($this, 'load_plugin' ));
+        add_action( 'plugins_loaded', array($this, 'load_front_page' ));
+    }
+
+    /**
+     * Charge notre dépendance Carbon Fields via Composer
+     */
+    public function load_carbonfields()
+    {
+        require_once plugin_dir_path( __FILE__ ) . '/vendor/autoload.php';
+        \Carbon_Fields\Carbon_Fields::boot();
+    }
+
+    public function load_plugin()
+    {
+        require_once plugin_dir_path( __FILE__ ) . '/includes/options.php';
+    }
+
+    public function load_front_page()
+    {
+        require_once plugin_dir_path( __FILE__ ) . '/includes/load_front_page.php';
+    }
+
 }
 
-/**
- * Charge notre dépendance Carbon Fields via Composer
- */
-function load_carbonfields() {
-    require_once plugin_dir_path( __FILE__ ) . '/vendor/autoload.php';
-    \Carbon_Fields\Carbon_Fields::boot();
-}
-add_action( 'after_setup_theme', __NAMESPACE__ . '\\load_carbonfields' );
-//add_action( 'after_setup_theme', [ Carbon_Fields::class, 'boot' ] );
 
-/**
- * Charge notre fichier de plugin
- *
- * @return mixed
- */
-function load_plugin() {
-    require_once plugin_dir_path( __FILE__ ) . '/includes/options.php';
-}
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\load_plugin' );
-
-function load_front_page() {
-    require_once plugin_dir_path( __FILE__ ) . '/includes/load_front_page.php';
-}
-add_action( 'plugins_loaded', __NAMESPACE__ . '\\load_front_page' );
-
+new customLandingPage();
 
