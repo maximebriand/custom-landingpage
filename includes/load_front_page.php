@@ -77,7 +77,7 @@ class Front_page {
 
     public function check_for_frontpage($content)
     {
-        if ( is_front_page()  ) {
+        if ( is_front_page() || (is_front_page() && is_home()) ) {
             $content = $this->check_custom_slug($content);
         }
         return $content;
